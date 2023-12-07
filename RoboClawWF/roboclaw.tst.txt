@@ -1,0 +1,16 @@
+GetFwVerStr
+Init2209
+SetCurrentAxis,1
+SetMovePolarity,False
+Set2209MicroStepMode,8
+Set2209MotorCurrent,1000
+SetMaxSpeed,20000
+SetMaxHomeSearchMove,300000
+SetMaxTravel,300000
+SetHomingSpeed,20000
+InitializeAxis
+#InitializeAxis
+GetCurrentMotorStatus
+SLEEP,5000
+GetCurrentMotorStatus
+MoveToPosition,120000

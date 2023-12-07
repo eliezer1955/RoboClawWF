@@ -1,0 +1,163 @@
+﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{F46F8DA7-02E4-4C7F-A625-132BE384ABBD}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <NoStandardLibraries>false</NoStandardLibraries>
+    <AssemblyName>WindowsApplication</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>RoboClawWF</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\x64\Debug\roboclaw.tst.txt" />
+    <Content Include="RoboClawWF\DCMotor.txt" />
+    <Content Include="RoboClawWF\roboclaw.tst.txt" />
+    <Content Include="RoboClawWF\RoboClawWF.sln" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".git\COMMIT_EDITMSG" />
+    <None Include=".git\config" />
+    <None Include=".git\description" />
+    <None Include=".git\HEAD" />
+    <None Include=".git\hooks\applypatch-msg.sample" />
+    <None Include=".git\hooks\commit-msg.sample" />
+    <None Include=".git\hooks\fsmonitor-watchman.sample" />
+    <None Include=".git\hooks\post-update.sample" />
+    <None Include=".git\hooks\pre-applypatch.sample" />
+    <None Include=".git\hooks\pre-commit.sample" />
+    <None Include=".git\hooks\pre-merge-commit.sample" />
+    <None Include=".git\hooks\pre-push.sample" />
+    <None Include=".git\hooks\pre-rebase.sample" />
+    <None Include=".git\hooks\pre-receive.sample" />
+    <None Include=".git\hooks\prepare-commit-msg.sample" />
+    <None Include=".git\hooks\push-to-checkout.sample" />
+    <None Include=".git\hooks\sendemail-validate.sample" />
+    <None Include=".git\hooks\update.sample" />
+    <None Include=".git\index" />
+    <None Include=".git\info\exclude" />
+    <None Include=".git\logs\HEAD" />
+    <None Include=".git\logs\refs\heads\master" />
+    <None Include=".git\logs\refs\remotes\origin\master" />
+    <None Include=".git\objects\05\fa52fb16ffbc812157c82ff0945f9b018a28f8" />
+    <None Include=".git\objects\2d\a78f0e05aaa8b0a4f693d4f7f2be187f272629" />
+    <None Include=".git\objects\46\14a7c833c9a28a3d1e7d5201b80d5ac3e51d13" />
+    <None Include=".git\objects\4e\7eafe29c62381938275854f7946666ea43511c" />
+    <None Include=".git\objects\7f\fb660a5761e4a16d9cc5eafb7af5033017d431" />
+    <None Include=".git\objects\91\bb799841e00dd535331859f43423bdb15777c9" />
+    <None Include=".git\objects\9b\d627b90abcae1d2740d336747540023781abea" />
+    <None Include=".git\objects\ae\a2ec6d29287e3423723b0c65d834a649e3801b" />
+    <None Include=".git\objects\c0\66fe56f5fad44980d0c5d7e6676deb8d497591" />
+    <None Include=".git\objects\c2\0ea6b7db2ef1c79ec070819806ac7f971e8821" />
+    <None Include=".git\objects\pack\pack-402403489d7606c829432895eba3ec98b964040f.idx" />
+    <None Include=".git\objects\pack\pack-402403489d7606c829432895eba3ec98b964040f.pack" />
+    <None Include=".git\objects\pack\pack-402403489d7606c829432895eba3ec98b964040f.rev" />
+    <None Include=".git\packed-refs" />
+    <None Include=".git\refs\heads\master" />
+    <None Include=".git\refs\remotes\origin\master" />
+    <None Include=".vs\RoboClawWF\v16\.suo" />
+    <None Include="app.config" />
+    <None Include="RoboClawWF\App.config" />
+    <None Include="RoboClawWF\balin" />
+    <None Include="RoboClawWF\Properties\Settings.settings" />
+    <None Include="RoboClawWF\RoboClawWF" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="RoboClawWF\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RoboClawWF\Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RoboClawWF\IClient.cs" />
+    <Compile Include="RoboClawWF\IPCConnection.cs" />
+    <Compile Include="RoboClawWF\IServer.cs" />
+    <Compile Include="RoboClawWF\MacroRunner.cs" />
+    <Compile Include="RoboClawWF\MessageReceivedEventArgs.cs" />
+    <Compile Include="RoboClawWF\NamedPipeBase.cs" />
+    <Compile Include="RoboClawWF\NamedPipeClient.cs" />
+    <Compile Include="RoboClawWF\npclient.cs" />
+    <Compile Include="RoboClawWF\Program.cs" />
+    <Compile Include="RoboClawWF\Properties\AssemblyInfo.cs" />
+    <Compile Include="RoboClawWF\Properties\Resources.Designer.cs" />
+    <Compile Include="RoboClawWF\Properties\Settings.Designer.cs" />
+    <Compile Include="RoboClawWF\Roboclaw.cs" />
+    <Compile Include="RoboClawWF\RoboClawController.cs" />
+    <Compile Include="RoboClawWF\StreamString.cs" />
+    <Compile Include="RoboClawWF\TimeUtils.cs" />
+    <Compile Include="RoboClawWF\USB.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RoboClawWF\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RoboClawWF\Properties\Resources.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include=".git\objects\info\" />
+    <Folder Include=".git\refs\tags\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
+  <ProjectExtensions>
+    <VisualStudio AllowExistingFolder="true" />
+  </ProjectExtensions>
+</Project>
