@@ -122,6 +122,7 @@
     <None Include="RoboClawWF\RoboClawWF" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RoboClawWF\ComPortMap.cs" />
     <Compile Include="RoboClawWF\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,6 +156,11 @@
   <ItemGroup>
     <Folder Include=".git\objects\info\" />
     <Folder Include=".git\refs\tags\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
+    </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

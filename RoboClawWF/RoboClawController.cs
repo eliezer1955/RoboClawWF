@@ -57,7 +57,10 @@ namespace RoboClawWF
                 CommandNumber.Add(command.CmdName, i++);
             }
             CurrentMacro = runthis;
-            rc = new RoboclawClassLib.Roboclaw( "COM5", 115200, 0x80 ); //initialize com port
+            //get name of comport associated to roboClaw (as obtained by Listports.py)
+            ComPortMap map = new ComPortMap();
+            var comport = map.GetComPort( "roboClaw" );
+            rc = new RoboclawClassLib.Roboclaw( comport, 115200, 0x80 ); //initialize com port
             rc.Open();
         }
 
