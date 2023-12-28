@@ -1,12 +1,14 @@
 ﻿
 using System;
 using System.Collections;
+using System.Configuration;
 using System.IO;
 using System.IO.Ports;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static RoboClawWF.RoboClawController;
 
 namespace RoboClawWF
 {
@@ -77,14 +79,17 @@ namespace RoboClawWF
             ArrayList argsin = new ArrayList();
             Int16 current1 = 0;
             Int16 current2 = 0;
+            int M1cnt = 0, M2cnt = 0;
             argsin.Add( current1 );
             argsin.Add( current2 );
             while (currentTime - startTime < period)
             {
-                rc.ReadCmd( rc.m_address, 49, ref argsin );
+                rc.GetCurrents( ref current1, ref current2 );
                 Console.WriteLine( current1.ToString(), " ", current2.ToString() );
                 controller.SetControlPropertyThreadSafe( controller.parent.progressBar1, "Value", current1 );
                 controller.SetControlPropertyThreadSafe( controller.parent.progressBar2, "Value", current2 );
+                M1cnt = controller.dcMotor.ReadEncoderPosition( 1 );
+                M2cnt = controller.dcMotor.ReadEncoderPosition( 2 );
                 currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             }
             return period;
@@ -119,6 +124,67 @@ namespace RoboClawWF
             return line;
         }
 
+        bool SendCommand( string command, int param )
+        {
+            int enc = 0;
+            byte status = 0;
+            int speed = 0;
+            short curr1 = 0;
+            short curr2 = 0;
+            byte address = 0x80;
+            string version = "";
+            byte pwr = 255;
+
+
+            switch (command)
+            {
+                case "M1Forward":
+                    rc.ST_M1Forward( pwr );
+                    break;
+                case "M1Backward":
+                    rc.ST_M1Backward( pwr );
+                    break;
+                case "M2Forward":
+                    rc.ST_M2Forward( pwr );
+                    break;
+                case "M2Backward":
+                    rc.ST_M1Backward( pwr );
+                    break;
+                case "GetM1Encoder":
+                    int encoder1 = controller.dcMotor.ReadEncoderPosition( 1 );
+                    controller.SetControlPropertyThreadSafe( controller.parent.textBox2, "Text", encoder1.ToString() );
+                    break;
+                case "GetM2Encoder":
+                    int encoder2 = controller.dcMotor.ReadEncoderPosition( 2 );
+                    controller.SetControlPropertyThreadSafe( controller.parent.textBox3, "Text", encoder2.ToString() );
+                    break;
+                case "GetM1ISpeed":
+                    rc.GetM1ISpeed( ref speed, ref status );
+                    break;
+                case "GetM2ISpeed":
+                    rc.GetM2ISpeed( ref speed, ref status );
+                    break;
+                case "ResetEncoders":
+                    rc.ResetEncoders();
+                    break;
+                case "GetVersion":
+                    controller.dcMotor.GetFirmwareVersion();
+                    break;
+                case "M1Speed":
+                    controller.dcMotor.RunConstSpeed( 1, speed );
+                    break;
+                case "M2Speed":
+                    controller.dcMotor.RunConstSpeed( 1, speed ); ;
+                    break;
+                case "GetCurrents":
+                    rc.GetCurrents( ref curr1, ref curr2 );
+                    controller.SetControlPropertyThreadSafe( controller.parent.progressBar1, "Value", curr1 );
+                    controller.SetControlPropertyThreadSafe( controller.parent.progressBar2, "Value", curr2 );
+                    break;
+            }
+
+            return false;
+        }
         public async void RunMacro()
         {
 

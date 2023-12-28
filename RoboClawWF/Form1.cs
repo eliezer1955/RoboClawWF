@@ -21,7 +21,7 @@ namespace RoboClawWF
             InitializeComponent();
             CmdLineArgs = args;
             button2.Text = CurrentMacro;
-            RoboClawController = new RoboClawController(CurrentMacro, this);
+            RoboClawController = new RoboClawController(CurrentMacro, this );
             if (CmdLineArgs.Length > 0)
             {
                 Thread runner = new Thread( () => RoboClawController.SocketMode( CmdLineArgs ) );
@@ -65,6 +65,16 @@ namespace RoboClawWF
         }
 
         private void progressBar2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label6_Click( object sender, EventArgs e )
+        {
+
+        }
+
+        private void textBox2_TextChanged( object sender, EventArgs e )
         {
 
         }

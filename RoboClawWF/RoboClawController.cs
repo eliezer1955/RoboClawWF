@@ -19,6 +19,7 @@ namespace RoboClawWF
             public string Description;
             public string parameters;
             public string returns;
+            Action<char> action;
             public int timeout;
             public int response;
         }
@@ -31,7 +32,7 @@ namespace RoboClawWF
         public Dictionary<string, int> CommandNumber = new Dictionary<string, int>();
         public RoboclawClassLib.Roboclaw rc = null; 
         public CommandStructure[] commandStructure = new CommandStructure[] {
-            new CommandStructure{CmdNumber=0, CmdName="M1Forward", Description="Set motor1 direction", parameters="c", returns=""},
+            new CommandStructure{CmdNumber=0, CmdName="M1Forward", Description="Set motor1 direction", parameters="c", returns="" },
             new CommandStructure{CmdNumber=1, CmdName="M1Backward", Description="Set motor1 direction", parameters="c",  returns=""},
             new CommandStructure{CmdNumber=4, CmdName="M2Forward", Description="Set motor2 direction", parameters="c",  returns=""},
             new CommandStructure{CmdNumber=5, CmdName="M2Backward", Description="Set motor2 direction", parameters="c",  returns=""},
@@ -50,7 +51,9 @@ namespace RoboClawWF
         public MacroRunner macroRunner;
         public string CurrentMacro;
         public Form1 parent;
-        public RoboClawController(string runthis, Form1 parentIn)
+        public Dictionary<string, Action<int>> xlate= new Dictionary<string,Action<int>>();
+        public DCmotor dcMotor = null;
+        public RoboClawController(string runthis, Form1 parentIn )
         {
             parent = parentIn;
             int i = 0;
@@ -64,6 +67,8 @@ namespace RoboClawWF
             var comport = map.GetComPort( "roboClaw" );
             rc = new RoboclawClassLib.Roboclaw( comport, 115200, 0x80 ); //initialize com port
             rc.Open();
+            dcMotor=new DCmotor(rc);
+
         }
 
 

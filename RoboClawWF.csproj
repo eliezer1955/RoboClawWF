@@ -122,6 +122,7 @@
     <None Include="RoboClawWF\RoboClawWF" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DCMotor.cs" />
     <Compile Include="RoboClawWF\ComPortMap.cs" />
     <Compile Include="RoboClawWF\Form1.cs">
       <SubType>Form</SubType>
