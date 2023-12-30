@@ -86,11 +86,17 @@ namespace RoboClawWF
             {
                 rc.GetCurrents( ref current1, ref current2 );
                 Console.WriteLine( current1.ToString(), " ", current2.ToString() );
+                current1 = Math.Min(Math.Max(current1,(short) 0), (short)100);
+                current2 = Math.Min(Math.Max(current2, (short)0), (short)100);
+
                 controller.SetControlPropertyThreadSafe( controller.parent.progressBar1, "Value", current1 );
                 controller.SetControlPropertyThreadSafe( controller.parent.progressBar2, "Value", current2 );
                 M1cnt = controller.dcMotor.ReadEncoderPosition( 1 );
                 M2cnt = controller.dcMotor.ReadEncoderPosition( 2 );
+                controller.SetControlPropertyThreadSafe(controller.parent.textBox2, "Text", current1.ToString());
+                controller.SetControlPropertyThreadSafe(controller.parent.textBox3, "Text", current2.ToString());
                 currentTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                Thread.Yield();
             }
             return period;
         }
@@ -372,10 +378,10 @@ namespace RoboClawWF
 
 
 
-                fs.Close();
             }
 
 
+            fs.Close();
         }
 
     }

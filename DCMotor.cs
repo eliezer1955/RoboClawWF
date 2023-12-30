@@ -14,7 +14,7 @@ public class DCmotor
 	Roboclaw roboClaw;
 	public string foldername = @"C:\ProgramData\S2_Logs\EncoderLogs\";
 	public string filesuffix = @"_" + DateTime.Now.ToString( "yyyy_MM_dd_HHmmss" ) + "_EncoderLog.csv";
-	public object DCMotorLock;
+	public object DCMotorLock=new object();
 	//public string filename = @"C:\LabScript\EncoderLogs\" + DateTime.Now.ToString("yyyy_MM_dd_HHmmss") + "_EncoderLog.csv";
 	int encoder1 = 0;
 	int encoder2 = 0;
