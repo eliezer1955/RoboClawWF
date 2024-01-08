@@ -71,7 +71,9 @@
   <ItemGroup>
     <Content Include="bin\x64\Debug\roboclaw.tst.txt" />
     <Content Include="RoboClawWF\DCMotor.txt" />
-    <Content Include="RoboClawWF\roboclaw.tst.txt" />
+    <Content Include="RoboClawWF\roboclaw.tst.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="RoboClawWF\RoboClawWF.sln" />
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +118,9 @@
     <None Include=".git\refs\remotes\origin\master" />
     <None Include=".vs\RoboClawWF\v16\.suo" />
     <None Include="app.config" />
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="RoboClawWF\App.config" />
     <None Include="RoboClawWF\balin" />
     <None Include="RoboClawWF\Properties\Settings.settings" />
@@ -159,6 +164,9 @@
     <Folder Include=".git\refs\tags\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="log4net">
+      <Version>2.0.15</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>

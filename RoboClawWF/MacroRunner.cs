@@ -14,6 +14,7 @@ namespace RoboClawWF
 {
     public class MacroRunner
     {
+        private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(typeof(MacroRunner));
         public string CurrentMacro;
         public RoboclawClassLib.Roboclaw rc;
         StreamReader fs = null;
