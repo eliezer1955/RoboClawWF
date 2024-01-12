@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,6 +17,8 @@ namespace RoboClawWF
         [STAThread]
         static void Main( string[] args )
         {
+            var configFile = new FileInfo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log4net.config"));
+            log4net.Config.XmlConfigurator.Configure(configFile);
             _logger.Info("RoboClaw Diag  is starting...");
             //System.Diagnostics.Debugger.Launch();
             Application.EnableVisualStyles();
