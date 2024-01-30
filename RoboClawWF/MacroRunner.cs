@@ -63,6 +63,8 @@ namespace RoboClawWF
         UInt16 m_crc;
         public PipeClient pipeClient = null;
         bool socketMode = false;
+        string[] Macro;
+
         int currentline = 0;
 
         private System.Collections.Generic.Dictionary<string, int> label = new System.Collections.Generic.Dictionary<string, int>();
@@ -113,9 +115,20 @@ namespace RoboClawWF
             CurrentMacro = filename;
             controller = sc;
             socketMode = (CurrentMacro == null);
+            int currentline = 0;
             if (CurrentMacro != null)
             {
-                fs = new StreamReader(CurrentMacro);
+                //Load full macro into memory as array of strings
+                Macro = System.IO.File.ReadAllLines(CurrentMacro);
+                //Scan macro array for labels, record their line number in Dictionary
+                currentline = 0;
+                foreach (string line in Macro)
+                {
+                    string[] line1 = line.Split('#'); //Disregard comments
+                    if (line1[0].StartsWith(":"))
+                        label.Add(line1[0].Substring(1).TrimEnd('\r', '\n', ' ', '\t'), currentline + 1);
+                    ++currentline;
+                }
             }
         }
 
@@ -149,7 +162,7 @@ namespace RoboClawWF
             }
             else
             {
-                s = fs.ReadLine();
+                s = currentline >= Macro.Length ? null : Macro[currentline++];
             }
             return s;
         }
@@ -291,8 +304,10 @@ namespace RoboClawWF
                 if (line == null) break;
                 if (line.StartsWith("\0")) continue;
                 if (line.StartsWith("#")) continue;
+                if (line.StartsWith(":")) continue;
                 if (string.IsNullOrEmpty(line)) continue;
                 if (string.IsNullOrWhiteSpace(line)) continue;
+
 
                 Console.WriteLine("Read line:{0}", line);
                 if (line.StartsWith("END")) //Terminate program
@@ -325,6 +340,7 @@ namespace RoboClawWF
                         continue; //do nothing, go to read next command
                                   //value is not equal to last response, execute conditional command
                     line = ""; //reassemble rest of conditional command
+
                     for (int i = 3; i < parsedLine.Length; i++)
                     {
                         line += parsedLine[i];
@@ -366,7 +382,6 @@ namespace RoboClawWF
                         continue;
                     if (parsedLine[1] != null)
                         value = parsedLine[1]; //isolate target value
-
                     response = Evaluate(parsedLine[1]);
                     changeVar("response", response);
                     continue;
@@ -443,9 +458,22 @@ namespace RoboClawWF
                 // "Nested" macro calling
                 if (line.StartsWith("@"))
                 {
-                    MacroRunner macroRunner = new MacroRunner(controller, pipeClient, line.Substring(1));
-                    macroRunner.RunMacro();
-                    continue;
+                    string value = "";
+                    string[] line1 = line.Split('#'); //Disregard comments
+                    string[] parsedLine = line1[0].Split(',');
+                    if (string.IsNullOrWhiteSpace(parsedLine[0])) //Disregard blanks lines
+                        continue;
+                    if (parsedLine[1] != null)
+                        value = parsedLine[1].TrimEnd('\r', '\n', ' ', '\t');
+                    if (!label.ContainsKey(value))
+                        _logger.Error("Unknown label " + value);
+                    else
+                    {
+
+                        currentline = label[value];
+                        continue;
+                    }
+
                 }
                 // Wait for fixed time
                 if (line.StartsWith("SLEEP"))
