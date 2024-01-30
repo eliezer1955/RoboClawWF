@@ -103,10 +103,22 @@ namespace RoboClawWF
 
         async public Task SocketMode( string[] CmdLineArgs )
         {
-            PipeClient pipeClient = new PipeClient();
-            var mr = new MacroRunner( this, pipeClient, null );
-            //Thread macroThread = new Thread( new ThreadStart( mr.RunMacro ) );
-            mr.RunMacro();
+            PipeClient pipeClient = null;
+            if (CmdLineArgs[1] == "Slave")
+            {
+                pipeClient = new PipeClient();
+                var mr = new MacroRunner(this, pipeClient, null);
+                //Thread macroThread = new Thread( new ThreadStart( mr.RunMacro ) );
+                mr.RunMacro();
+            }
+            else
+            {
+                parent.CurrentMacro = CurrentMacro = CmdLineArgs[1];
+                parent.button2.Text = CurrentMacro;
+                var mr = new MacroRunner(this, null, CmdLineArgs[1]);
+                //Thread macroThread = new Thread( new ThreadStart( mr.RunMacro ) );
+                mr.RunMacro();
+            }
         }
 
     }

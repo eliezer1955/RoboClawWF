@@ -16,17 +16,25 @@ namespace RoboClawWF
         public string CurrentMacro = "RoboClaw.tst.txt";
         public RoboClawController RoboClawController;
         public string[] CmdLineArgs;
-        public Form1( String[] args)
+        public Form1(String[] args)
         {
             InitializeComponent();
             CmdLineArgs = args;
+            if (args[0] != "Slave")
+                CurrentMacro = args[0];
             button2.Text = CurrentMacro;
-            RoboClawController = new RoboClawController(CurrentMacro, this );
+            RoboClawController = new RoboClawController(CurrentMacro, this);
             if (CmdLineArgs.Length > 0)
-            {
-                Thread runner = new Thread( () => RoboClawController.SocketMode( CmdLineArgs ) );
-                runner.Start();
-            }
+                if (CmdLineArgs[0] == "Slave")
+                {
+                    Thread runner = new Thread(() => RoboClawController.SocketMode(CmdLineArgs));
+                    runner.Start();
+                }
+            else
+                {
+                    MacroRunner macroRunner = new MacroRunner(RoboClawController, null, CurrentMacro);
+                    macroRunner.RunMacro();
+                }
 
         }
         // run macro
@@ -34,7 +42,7 @@ namespace RoboClawWF
         {
             Control[] macro = this.Controls.Find("button2", true);
             string CurrentMacro = macro[0].Text;
-            MacroRunner macroRunner = new MacroRunner(RoboClawController,null, CurrentMacro);
+            MacroRunner macroRunner = new MacroRunner(RoboClawController, null, CurrentMacro);
             macroRunner.RunMacro();
         }
 
@@ -69,12 +77,12 @@ namespace RoboClawWF
 
         }
 
-        private void label6_Click( object sender, EventArgs e )
+        private void label6_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void textBox2_TextChanged( object sender, EventArgs e )
+        private void textBox2_TextChanged(object sender, EventArgs e)
         {
 
         }

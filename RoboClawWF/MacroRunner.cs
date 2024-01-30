@@ -1,10 +1,13 @@
 ﻿
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.IO;
 using System.IO.Ports;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,6 +17,43 @@ namespace RoboClawWF
 {
     public class MacroRunner
     {
+        public class MyRef<T>
+        {
+            public T Ref { get; set; }
+        }
+
+
+        public void refreshGUI()
+        {
+            this.controller.parent.Invalidate();
+            this.controller.parent.Update();
+            this.controller.parent.Refresh();
+            Application.DoEvents();
+        }
+
+
+
+        public void AddVar(string key, object v) //storing the ref to a string
+        {
+            if (null == v)
+            {
+                v = new MyRef<string> { Ref = " " };
+            }
+            variables.Add(key, v);
+        }
+
+
+
+        public void changeVar(string key, object newValue) //changing any of them
+        {
+            var ref2 = variables[key] as MyRef<string>;
+            if (ref2 == null)
+            {
+                ref2 = new MyRef<string> { Ref = " " };
+            }
+            ref2.Ref = newValue.ToString();
+        }
+
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(typeof(MacroRunner));
         public string CurrentMacro;
         public RoboclawClassLib.Roboclaw rc;
@@ -23,6 +63,48 @@ namespace RoboClawWF
         UInt16 m_crc;
         public PipeClient pipeClient = null;
         bool socketMode = false;
+        int currentline = 0;
+
+        private System.Collections.Generic.Dictionary<string, int> label = new System.Collections.Generic.Dictionary<string, int>();
+        private String response;
+        private System.Collections.Generic.Dictionary<string, object> variables = new Dictionary<string, object>();
+
+
+        private string ExpandVariables(string instring)
+        {
+            StringBuilder sb = new StringBuilder();
+            int start = 0;
+            int i;
+
+            var val = new MyRef<string> { Ref = "" };
+            for (i = start; i < instring.Length; i++)
+                if (instring[i] == '%')
+                    for (int j = 1; j < instring.Length - i; j++)
+                        if (instring[i + j] == '%')
+                        {
+                            sb.Append(instring.Substring(start, i - start));
+                            string key = instring.Substring(i + 1, j - 1);
+                            if (variables.ContainsKey(key))
+                            {
+                                val = (MyRef<string>)variables[key];
+                                sb.Append(val.Ref);
+                                start = i = i + j + 1;
+                            }
+                            else _logger.Error("Unknown variable:" + val);
+                            continue;
+                        }
+            if ((i - start > 0) && (start < instring.Length))
+                sb.Append(instring.Substring(start, i - start));
+            return sb.ToString();
+        }
+
+        private string Evaluate(string instring)
+        {
+            instring = ExpandVariables(instring);
+            DataTable dt = new DataTable();
+            var v = dt.Compute(instring, "");
+            return v.ToString();
+        }
 
         public MacroRunner(RoboClawController sc, PipeClient pipeClientin, string filename = null)
         {
@@ -213,30 +295,71 @@ namespace RoboClawWF
                 if (string.IsNullOrWhiteSpace(line)) continue;
 
                 Console.WriteLine("Read line:{0}", line);
-                if (line.StartsWith("IFRETURNISNOT")) //conditional execution based on last return
+                if (line.StartsWith("END")) //Terminate program
                 {
-                    string value = "";
+                    string expr = "";
                     string[] line1 = line.Split('#'); //Disregard comments
                     string[] parsedLine = line1[0].Split(',');
                     if (string.IsNullOrWhiteSpace(parsedLine[0])) //Disregard blanks lines
                         continue;
                     if (parsedLine[1] != null)
-                        value = parsedLine[1]; //isolate target value
+                        expr = parsedLine[1]; //isolate expression
+                    Environment.Exit(Int32.Parse(Evaluate(expr)));
+                }
+                if (line.StartsWith("IFRETURNISNOT")) //conditional execution based on last return
+                {
+                    string value = "";
+                    string expr = "";
+                    string[] line1 = line.Split('#'); //Disregard comments
+                    string[] parsedLine = line1[0].Split(',');
+                    if (string.IsNullOrWhiteSpace(parsedLine[0])) //Disregard blanks lines
+                        continue;
+                    if (parsedLine[1] != null)
+                        expr = parsedLine[1]; //isolate expression
+                    if (parsedLine[2] != null)
+                        value = parsedLine[2]; //isolate target value
+                    value = Evaluate(value);
+                    expr = Evaluate(expr);
 
-                    if (value == response) //last return matches value
+                    if (value == expr) //last return matches value
                         continue; //do nothing, go to read next command
-                    //value is not equal to last response, execute conditional command
+                                  //value is not equal to last response, execute conditional command
                     line = ""; //reassemble rest of conditional command
-                    for (int i = 2; i < parsedLine.Length; i++)
+                    for (int i = 3; i < parsedLine.Length; i++)
                     {
                         line += parsedLine[i];
                         if (i < parsedLine.Length - 1) line += ",";
                     }
-                    //coninue execution as if it was non-conditional
+                    //continue execution as if it was non-conditional
                 }
                 if (line.StartsWith("IFRETURNIS")) //conditional execution based on last return
                 {
                     string value = "";
+                    string expr = "";
+                    string[] line1 = line.Split('#'); //Disregard comments
+                    string[] parsedLine = line1[0].Split(',');
+                    if (string.IsNullOrWhiteSpace(parsedLine[0])) //Disregard blanks lines
+                        continue;
+                    if (parsedLine[1] != null)
+                        expr = parsedLine[1]; //isolate expression
+                    if (parsedLine[2] != null)
+                        value = parsedLine[2]; //isolate target value
+                    value = Evaluate(value);
+                    expr = Evaluate(expr);
+                    if (value != Evaluate(expr)) //last return does not match value
+                        continue; //do nothing, go to read next command
+                                  //value is equal to last response
+                    line = ""; //reassemble rest of command
+                    for (int i = 3; i < parsedLine.Length; i++)
+                    {
+                        line += parsedLine[i];
+                        if (i < parsedLine.Length - 1) line += ",";
+                    }
+                    //continue execution as if it was non-conditional
+                }
+                if (line.StartsWith("EVALUATE")) //Set response to evaluation of expression
+                {
+                    string value = "";
                     string[] line1 = line.Split('#'); //Disregard comments
                     string[] parsedLine = line1[0].Split(',');
                     if (string.IsNullOrWhiteSpace(parsedLine[0])) //Disregard blanks lines
@@ -244,17 +367,46 @@ namespace RoboClawWF
                     if (parsedLine[1] != null)
                         value = parsedLine[1]; //isolate target value
 
-                    if (value != response) //last return does not match value
-                        continue; //do nothing, go to read next command
-                    //value is equal to last response
-                    line = ""; //reassemble rest of command
-                    for (int i = 2; i < parsedLine.Length; i++)
-                    {
-                        line += parsedLine[i];
-                        if (i < parsedLine.Length - 1) line += ",";
-                    }
-                    //coninue execution as if it was non-conditional
+                    response = Evaluate(parsedLine[1]);
+                    changeVar("response", response);
+                    continue;
+
                 }
+                if (line.StartsWith("SET")) //set value of global var; create it if needed
+                {
+                    string variable = "";
+                    string value = "";
+                    string[] line1 = line.Split('#'); //Disregard comments
+                    string[] parsedLine = line1[0].Split(',');
+                    if (string.IsNullOrWhiteSpace(parsedLine[0])) //Disregard blanks lines
+                        continue;
+                    if (parsedLine[1] != null)
+                        variable = parsedLine[1];
+                    if (parsedLine[2] != null)
+                        value = Evaluate(parsedLine[2]);
+                    if (!variables.ContainsKey(variable))
+                        AddVar(variable, null);
+                    changeVar(variable, value);
+                    continue;
+                }
+                if (line.StartsWith("EXIT")) //stop macro
+                {
+                    break;
+                }
+                if (line.StartsWith("EXECUTE")) //stop macro
+                {
+                    string value = "";
+
+                    string[] line1 = line.Split('#'); //Disregard comments
+                    string[] parsedLine = line1[0].Split(',');
+                    if (string.IsNullOrWhiteSpace(parsedLine[0])) //Disregard blanks lines
+                        continue;
+                    if (parsedLine[1] != null)
+                        value = parsedLine[1];
+                    System.Diagnostics.Process.Start("CMD.exe", "/C " + value);
+                    continue;
+                }
+
                 if (line.StartsWith("LOGERROR")) //write log entry
                 {
                     string value = "";
@@ -263,10 +415,29 @@ namespace RoboClawWF
                     if (string.IsNullOrWhiteSpace(parsedLine[0])) //Disregard blanks lines
                         continue;
                     if (parsedLine[1] != null)
-                        value = parsedLine[1];
+                        value = ExpandVariables(parsedLine[1]);
 
                     _logger.Error(value);
                     continue;
+                }
+                if (line.StartsWith("GOTO"))
+                {
+                    string value = "";
+                    string[] line1 = line.Split('#'); //Disregard comments
+                    string[] parsedLine = line1[0].Split(',');
+                    if (string.IsNullOrWhiteSpace(parsedLine[0])) //Disregard blanks lines
+                        continue;
+                    if (parsedLine[1] != null)
+                        value = parsedLine[1].TrimEnd('\r', '\n', ' ', '\t');
+                    if (!label.ContainsKey(value))
+                        _logger.Error("Unknown label " + value);
+                    else
+                    {
+
+                        currentline = label[value];
+                        continue;
+                    }
+
                 }
 
                 // "Nested" macro calling
