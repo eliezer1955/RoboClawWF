@@ -70,6 +70,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\x64\Debug\roboclaw.tst.txt" />
+    <Content Include="PIDtest.tst.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PlotPIDTest.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="RoboClawWF\DCMotor.txt" />
     <Content Include="RoboClawWF\roboclaw.tst.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -2377,6 +2377,28 @@ namespace RoboclawClassLib
             return false;
 		}
 
+        public void autoTune()
+        {
+            uint qpps = 14000;
+            uint hyst = 1;
+            VelocityAutotune( 0, qpps, hyst );
+            VelocityAutotune( 1, qpps, hyst );
+            //WriteEEprom(address, value);
+        }
+
+        public void setPIDs()
+        {
+            uint qpps = 14000;
+            double  p = 2.0;
+            double  i = 0.225;
+            double d = 0.0;
+            byte[] address = new byte[512];
+
+            SetVelocityConstants( 0, p, i, d, qpps );
+            SetVelocityConstants( 1, p, i, d, qpps );
+            
+        }
+
 		public bool GetCurrents(ref Int16 current1, ref Int16 current2)
         {
             ArrayList args = new ArrayList();
