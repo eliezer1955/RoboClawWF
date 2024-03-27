@@ -1,31 +1,42 @@
 ALERT,PID test
+STATUS,Collecting motor behavior at different speeds
 M1Forward,40
 M2Forward,40
-M1Speed,7500
-M2Speed,-7500
+M1Speed,3100
+M2Speed,-3100
 SLEEP,980
 MONITOR,20000,1020
-M1Speed,3750
-M2Speed,-3750
+M1Speed,2000
+M2Speed,-2000
 SLEEP,980
 MONITOR,20000,1020
-M1Speed,700
-M2Speed,-700
+M1Speed,900
+M2Speed,-900
 SLEEP,980
 MONITOR,20000,1020
-M1Speed,-700
-M2Speed,700
+M1Speed,-900
+M2Speed,900
 SLEEP,980
 MONITOR,20000,1020
-M1Speed,-3750
-M2Speed,3750
+M1Speed,-2000
+M2Speed,2000
 SLEEP,980
 MONITOR,20000,1020
-M1Speed,-7500
-M2Speed,7500
+M1Speed,-3100
+M2Speed,3100
 SLEEP,980
 MONITOR,20000,1020
+#stop motion
+M1Forward,0
+M2Forward,0
+M2Forward,0
+M2Backward,0
+M1Speed,0
+M2Speed,0
+MONITOR,5000
+
 EXECUTE,python PlotPIDTest.py,parallel
+STATUS,Test completed!
 
 
 

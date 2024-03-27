@@ -1,29 +1,44 @@
-GetFwVerStr
-Init2209
-SetCurrentAxis,0
-SetMovePolarity,False
-Set2209MicroStepMode,8
-Set2209MotorCurrent,1000
-SetMaxSpeed,20000
-SetMaxHomeSearchMove,300000
-SetMaxTravel,300000
-SetHomingSpeed,20000
-InitializeAxis
-#InitializeAxis
-GetCurrentMotorStatus
-SLEEP,5000
-GetCurrentMotorStatus
+SETPID #set PID coeffs  to default vlues
 
-SetCurrentAxis,1
-SetMovePolarity,False
-Set2209MicroStepMode,8
-Set2209MotorCurrent,1000
-SetMaxSpeed,20000
-SetMaxHomeSearchMove,300000
-SetMaxTravel,300000
-SetHomingSpeed,20000
-InitializeAxis
-#InitializeAxis
-GetCurrentMotorStatus
-SLEEP,5000
-GetCurrentMotorStatus
+M1Forward,0
+M2Forward,0
+M2Backward,0
+M2Backward,0
+M1Speed,0
+M2Speed,0
+
+
+
+
+ALERT,Motor left test forward
+STATUS,Testing Motor Left forward
+M1Speed,2600
+M1Forward,40
+MONITOR,100000
+M1Speed,0
+M1Forward,0
+ALERT,Motor left backward High Speed
+STATUS,Testing Motor Left backward
+M1Speed,-1300
+M1Forwad,0
+M1Backward,0
+MONITOR,100000
+M1Backward,0
+M1Speed,0
+
+ALERT,Motor right test forward
+STATUS,Testing Motor Right forward
+M2Speed,2600
+M2Forward,40
+MONITOR,10000
+M2Speed,0
+M2Forward,0
+ALERT,Motor right backward
+STATUS,Testing Motor Right backward High Speed
+M2Speed,-1300
+M2Backward,0
+MONITOR,10000
+M2Forward,0
+M2Backward,0
+M2Speed,0
+STATUS,Test completed!

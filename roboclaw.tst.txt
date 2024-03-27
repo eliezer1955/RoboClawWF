@@ -1,0 +1,46 @@
+M1Forward,0
+M2Forward,0
+M2Forward,0
+M2Backward,0
+M1Speed,0
+M2Speed,0
+
+SETPID #set PID coeffs  to default vlues
+
+
+ALERT,Motor left test forward
+STATUS,Testing Motor Left forward; speed 900
+M1Speed,900
+MONITOR,10000
+M1Speed,0
+
+ALERT,Motor left backward High Speed
+STATUS,Testing Motor Left backward; speed -3100
+M1Speed,-3100
+
+MONITOR,10000
+M1Speed,0
+
+ALERT,Motor right test forward
+STATUS,Testing Motor Right forward; speed 900
+M2Speed,900
+
+MONITOR,10000
+M2Speed,0
+
+ALERT,Motor right backward
+STATUS,Testing Motor Right backward High Speed; speed -3100
+M2Speed,-3100
+
+MONITOR,10000
+
+M2Speed,0
+#stop motion
+M1Forward,0
+M2Forward,0
+M2Forward,0
+M2Backward,0
+M1Speed,0
+M2Speed,0
+MONITOR,5000
+STATUS,Test completed!

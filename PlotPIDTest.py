@@ -61,8 +61,8 @@ maxdelta=[-9999,-9999]
 
 accum = 0
 nsamples = 0
-v1targets=[[7500,3750,700,-700,-3750,-7500],
-           [-7500,-3750,-700,700,3750,7500]]
+v1targets=[[3100,2000,900,-900,-2000,-3100],
+           [-3100,-2000,-900,900,2000,3100]]
 startlines.append(len(file_contents))
 startlines=startlines[-7:]
 maxvarx=0

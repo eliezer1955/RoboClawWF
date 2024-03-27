@@ -200,7 +200,7 @@ namespace RoboClawWF
             int M1cnt = 0, M2cnt = 0;
             argsin.Add( current1 );
             argsin.Add( current2 );
-            int v1 = 0, v2 = 0;
+            Int32 v1 = 0, v2 = 0;
             byte status = 0;
             long accum1 = 0, accum2 = 0;
             int nsamples = 0;
@@ -218,6 +218,8 @@ namespace RoboClawWF
 
                 controller.SetControlPropertyThreadSafe( controller.parent.progressBar1, "Value", current1 );
                 controller.SetControlPropertyThreadSafe( controller.parent.progressBar2, "Value", current2 );
+                controller.SetControlPropertyThreadSafe( controller.parent.textBox4, "Text", v1.ToString() );
+                controller.SetControlPropertyThreadSafe( controller.parent.textBox5, "Text", v2.ToString()  );
                 M1cnt = controller.dcMotor.ReadEncoderPosition( 1 );
                 M2cnt = controller.dcMotor.ReadEncoderPosition( 2 );
                 controller.SetControlPropertyThreadSafe( controller.parent.textBox2, "Text", current1.ToString() );
@@ -435,6 +437,14 @@ namespace RoboClawWF
                     continue;
 
                 }
+                // Set PID coeffs to default
+                if (line.StartsWith( "SETPID" ))
+                {
+                    string[] line1 = line.Split( '#' ); //Disregard comments
+                    setPIDs();
+                    continue;
+
+                }
                 if (line.StartsWith( "SET" )) //set value of global var; create it if needed
                 {
                     string variable = "";
@@ -483,6 +493,7 @@ namespace RoboClawWF
                     _logger.Error( value );
                     continue;
                 }
+
                 if (line.StartsWith( "GOTO" ))
                 {
                     string value = "";
@@ -502,6 +513,8 @@ namespace RoboClawWF
                     }
 
                 }
+
+
 
                 // "Nested" macro calling
                 if (line.StartsWith( "@" ))
@@ -626,6 +639,7 @@ namespace RoboClawWF
                         continue;
                     }
                 }
+               
                 //Actual command
                 string[] lin2 = line.Split( '#' ); //kill comments
                 if (!string.IsNullOrWhiteSpace( lin2[0] ))

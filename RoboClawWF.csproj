@@ -69,11 +69,13 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bin\x64\Debug\roboclaw.tst.txt" />
     <Content Include="PIDtest.tst.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="PlotPIDTest.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="roboclaw.tst.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="RoboClawWF\DCMotor.txt" />
@@ -174,6 +176,7 @@
   <ItemGroup>
     <Folder Include=".git\objects\info\" />
     <Folder Include=".git\refs\tags\" />
+    <Folder Include="bin\x64\Debug\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="log4net">
